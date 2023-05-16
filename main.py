@@ -1,9 +1,10 @@
 #!/usr/bin/python3
+from asgiref.wsgi import WsgiToAsgi
 from flask import Flask,jsonify,request,Response
 from token_1 import *
 from search import *
 app=Flask(__name__)
-
+asgi_app = WsgiToAsgi(app)
 requests={}
 @app.route('/token')
 def token():
@@ -28,5 +29,5 @@ def checkip(ip):
         )
     except Exception as ex:
         return jsonify({'UnknownError':str(ex)})
-if __name__=="__main__":
-    app.run()
+#if __name__=="__main__":
+#    app.run()
