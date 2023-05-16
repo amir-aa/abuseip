@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,request
+from flask import Flask,jsonify,request,Response
 from token_1 import *
 from search import *
 app=Flask(__name__)
@@ -12,8 +12,12 @@ def token():
 @app.route('/checkip/<ip>')
 def checkip(ip):
     if request.headers['apikey'] in requests:
-        print("authorized!")
+        #print("authorized!")
         requests[request.headers['apikey']]+=1
-    return jsonify(scan_local(ip))
+        return jsonify(scan_local(ip))
+    return  Response(
+        "Unauthorized! You need an API token ",
+        status=403,
+    )
 if __name__=="__main__":
     app.run()
