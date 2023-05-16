@@ -1,13 +1,19 @@
-from flask import Flask,jsonify
+from flask import Flask,jsonify,request
 from token_1 import *
-app=Flask()
+from search import *
+app=Flask(__name__)
 
+requests={}
 @app.route('/token')
 def token():
-
-    return jsonify({'key':generate_api_key()})
+    k=generate_api_key()
+    requests[k]=0
+    return jsonify({'key':k})
 @app.route('/checkip/<ip>')
 def checkip(ip):
-    
+    if request.headers['apikey'] in requests:
+        print("authorized!")
+        requests[request.headers['apikey']]+=1
+    return jsonify(scan_local(ip))
 if __name__=="__main__":
     app.run()
