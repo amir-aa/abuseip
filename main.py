@@ -11,6 +11,11 @@ def token():
     return jsonify({'key':k})
 @app.route('/checkip/<ip>')
 def checkip(ip):
+    if not request.headers['apikey']:
+            return  Response(
+        "Unauthorized! You need an API token ",
+        status=403,
+    )
     if request.headers['apikey'] in requests:
         #print("authorized!")
         requests[request.headers['apikey']]+=1
