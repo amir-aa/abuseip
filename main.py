@@ -12,18 +12,21 @@ def token():
     return jsonify({'key':k})
 @app.route('/checkip/<ip>')
 def checkip(ip):
-    if not request.headers['apikey']:
-            return  Response(
-        "Unauthorized! You need an API token ",
-        status=403,
-    )
-    if request.headers['apikey'] in requests:
-        #print("authorized!")
-        requests[request.headers['apikey']]+=1
-        return jsonify(scan_local(ip))
-    return  Response(
-        "Unauthorized! You need an API token ",
-        status=403,
-    )
+    try:
+        if request.headers['apikey'] in requests:
+            #print("authorized!")
+            requests[request.headers['apikey']]+=1
+            return jsonify(scan_local(ip))
+        return  Response(
+            "Unauthorized! You need an API token ",
+            status=403,
+        )
+    except KeyError:
+        return  Response(
+            "Unauthorized! You need an API token ",
+            status=403,
+        )
+    except Exception as ex:
+        return jsonify({'UnknownError':str(ex)})
 if __name__=="__main__":
     app.run()
