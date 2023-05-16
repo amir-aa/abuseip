@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from flask import Flask,jsonify,request,Response
 from token_1 import *
 from search import *
