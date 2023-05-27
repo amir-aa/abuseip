@@ -1,15 +1,5 @@
 import mmap,json
 ABUSETHRESHOLD=89
-def scan_local(value):
-        with open(r'badips.txt', 'rb', 0) as file:
-            s = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
-            
-            print(value)
-            if s.find(value.encode()) != -1:
-                return{value:'Abuseip'}
-            return {value:'clean'}
-
-
 def get_new_status(ip:str):
     """returns true if the abuse score is still above the Threshold otherwise False"""
     import requests
@@ -47,6 +37,23 @@ def get_new_status(ip:str):
      
 
 
+
+
+def scan_local(value):
+        with open(r'badips.txt', 'rb', 0) as file:
+            s = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
+            
+            print(value)
+            if s.find(value.encode()) != -1:
+                if not get_new_status(value):
+                     with open('logs.txt','a') as logfile:
+                          logfile.write(f"{value} is is False Positive")
+
+                return{value:'Abuseip'}
+            return {value:'clean'}
+
+
+
 def get_all_records():
     with open('badips.txt', 'r') as file:
         line=file.readline()
@@ -54,4 +61,4 @@ def get_all_records():
              print(line)
              line=file.readline()
 
-get_new_status('79.124.62.82')
+print(get_new_status('79.124.62.82'))
